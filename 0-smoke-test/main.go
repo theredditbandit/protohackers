@@ -19,7 +19,6 @@ func main() {
 
 	for {
 		conn, err := l.Accept()
-		defer conn.Close()
 
 		raddr := conn.RemoteAddr().String()
 		if err != nil {
@@ -28,6 +27,7 @@ func main() {
 		log.Printf("Connection %d from %s", n, raddr)
 		n++
 		go func() {
+			defer conn.Close()
 			ctx := context.WithValue(context.Background(), "clientAddr", raddr)
 			buff := make([]byte, 4096)
 			for {
