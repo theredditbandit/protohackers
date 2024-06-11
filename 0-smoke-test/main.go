@@ -8,8 +8,9 @@ import (
 )
 
 func main() {
+	n := 1
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
-	l, err := net.Listen("tcp", ":6942")
+	l, err := net.Listen("tcp4", ":6942")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -18,7 +19,10 @@ func main() {
 	defer l.Close()
 
 	for {
+		log.Printf("listening for conn %d", n)
 		conn, err := l.Accept()
+		log.Printf("accepted conn %d", n)
+		n++
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -41,6 +45,6 @@ func main() {
 				}
 			}
 		}()
+		log.Print("==========================================================")
 	}
-
 }
