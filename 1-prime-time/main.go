@@ -24,7 +24,7 @@ func main() {
 		log.Fatal(err)
 	}
 	addr := ln.Addr().String()
-	log.Info("Listening on %s", addr)
+	log.Info("Listening on ","addr" ,addr)
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
@@ -49,5 +49,5 @@ func handle(conn net.Conn) {
 	if err != nil {
 		log.Fatal("Failed to decode the json", "decoder error", err)
 	}
-	log.Info("method", data.Method, "number", data.Number)
+	log.Info("data ->","method", data.Method, "number", data.Number)
 }
