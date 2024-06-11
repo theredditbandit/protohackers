@@ -16,18 +16,19 @@ func main() {
 	}
 	addr := l.Addr().String()
 	log.Printf("Listening on %s", addr)
-	defer l.Close()
 
 	for {
-		log.Printf("listening for conn %d", n)
 		conn, err := l.Accept()
-		log.Printf("accepted conn %d", n)
-		n++
+		defer conn.Close()
+
+		raddr := conn.RemoteAddr().String()
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Printf("Connection %d from %s", n, raddr)
+		n++
 		go func() {
-			ctx := context.WithValue(context.Background(), "clientAddr", conn.RemoteAddr().String())
+			ctx := context.WithValue(context.Background(), "clientAddr", raddr)
 			buff := make([]byte, 4096)
 			for {
 				n, err := conn.Read(buff)
@@ -38,13 +39,12 @@ func main() {
 					}
 					log.Fatalf("failed to read data from client %s ,\n Err : %s", ctx.Value("clientAddr"), err)
 				}
-				log.Printf("(%s) Got data : %s ", ctx.Value("clientAddr"), buff[:n])
+				log.Printf("(%s) Got data : \n%s ", ctx.Value("clientAddr"), buff[:n])
 				_, err = conn.Write(buff[:n])
 				if err != nil {
 					log.Fatalf("(%s) failed to write data Err %s:", ctx.Value("clientAddr"), err)
 				}
 			}
 		}()
-		log.Print("==========================================================")
 	}
 }
