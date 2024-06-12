@@ -58,6 +58,7 @@ func handle(conn net.Conn) {
 				log.Info("number IS PRIME", "num", data.Number)
 				r.Method = "isPrime"
 				r.Prime = true
+				log.Info("sending response ", "resp", r)
 				if err := json.NewEncoder(conn).Encode(r); err != nil {
 					log.Fatal("failed to encode response", "err", err)
 				}
@@ -65,6 +66,7 @@ func handle(conn net.Conn) {
 				log.Info("number is NOT PRIME", "num", data.Number)
 				r.Method = "isPrime"
 				r.Prime = false
+				log.Info("sending response ", "resp", r)
 				if err := json.NewEncoder(conn).Encode(r); err != nil {
 					log.Fatal("failed to encode response", "err", err)
 				}
@@ -73,6 +75,7 @@ func handle(conn net.Conn) {
 			log.Warn("request is MALFORMED", "req", data)
 			r.Method = "MALFORMED"
 			r.Prime = false
+			log.Info("sending response ", "resp", r)
 			if err := json.NewEncoder(conn).Encode(r); err != nil {
 				log.Fatal("failed to encode response", "err", err)
 			}
@@ -88,10 +91,11 @@ func (d *request) hasPrime() bool {
 	case int:
 		return isPrime(num)
 	case float64:
-		if float64(int(num)) == num { // check if the float value is an int
-			log.Info("checking float64 converted int", "orignal", num, "converted", int(num))
-			return isPrime(int(num))
-		}
+		// if float64(int(num)) == num { // check if the float value is an int
+		// 	log.Info("checking float64 converted int", "orignal", num, "converted", int(num))
+		// 	return isPrime(int(num))
+		// }
+		return false
 	default:
 		log.Warnf("%s with type %T is not a prime number", num, num)
 	}
