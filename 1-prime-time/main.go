@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"io"
 	"net"
 	"os"
 
@@ -53,7 +54,9 @@ func handle(conn net.Conn) {
 		var r response
 		err := json.NewDecoder(conn).Decode(&data)
 		if err != nil {
-			log.Fatal("Failed to decode the json", "decoder error", err)
+			if err != io.EOF {
+				log.Fatal("Failed to decode the json", "decoder error", err)
+			}
 		}
 		log.Info("data ->", "method", data.Method, "number", data.Number)
 
