@@ -20,6 +20,7 @@ func Test_isPrime(t *testing.T) {
 		{name: "odd2", args: args{n: 7}, want: true},
 		{name: "odd3", args: args{n: 9}, want: false},
 		{name: "odd4", args: args{n: 37}, want: true},
+		{name: "odd4", args: args{n: 184309}, want: true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
