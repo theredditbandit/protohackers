@@ -47,7 +47,11 @@ func handle(conn net.Conn) {
 		err := json.NewDecoder(conn).Decode(&data)
 		if err != nil {
 			if err != io.EOF {
-				log.Fatal("Failed to decode the json", "decoder error", err)
+				if _, ok := err.(*json.SyntaxError); ok {
+					log.Warn("malformed request , failed to decode json", "decoder error", err, "")
+					sendMalformedReqBack(conn)
+					break
+				}
 			}
 		}
 		log.Info("data ->", "method", data.Method, "number", data.Number)
@@ -73,17 +77,22 @@ func handle(conn net.Conn) {
 			}
 		} else { // request is malformed
 			log.Warn("request is MALFORMED", "req", data)
-			r.Method = "MALFORMED"
-			r.Prime = false
-			log.Info("sending response ", "resp", r)
-			if err := json.NewEncoder(conn).Encode(r); err != nil {
-				log.Fatal("failed to encode response", "err", err)
-			}
+			sendMalformedReqBack(conn)
 			break
 		}
 	}
 	log.Warn("closing connection")
 	defer conn.Close()
+}
+
+func sendMalformedReqBack(conn net.Conn) {
+	var r response
+	r.Method = "MALFORMED"
+	r.Prime = false
+	log.Info("sending response ", "resp", r)
+	if err := json.NewEncoder(conn).Encode(r); err != nil {
+		log.Fatal("failed to encode response", "err", err)
+	}
 }
 
 func (d *request) hasPrime() bool {
