@@ -93,7 +93,8 @@ func (d *request) hasPrime() bool {
 	case float64:
 		intNum := int(num)
 		floatNum := float64(num)
-		if intNum == int(floatNum) {
+		diff := float64(intNum) - floatNum
+		if diff != 0 {
 			log.Info("checking float64 converted int", "orignal", num, "converted", int(num))
 			return isPrime(int(num))
 		}
