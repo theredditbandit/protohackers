@@ -91,12 +91,13 @@ func (d *request) hasPrime() bool {
 		log.Info("num is an int", "num", num)
 		return isPrime(num)
 	case float64:
-		// if float64(int(num)) == num { // check if the float value is an int
-		// 	log.Info("checking float64 converted int", "orignal", num, "converted", int(num))
-		// 	return isPrime(int(num))
-		// }
-
-		log.Debug("num is a float", "float", num)
+		intNum := int(num)
+		floatNum := float64(num)
+		if intNum == int(floatNum) {
+			log.Info("checking float64 converted int", "orignal", num, "converted", int(num))
+			return isPrime(int(num))
+		}
+		log.Warn("num is a float", "float", num)
 		return false
 	default:
 		log.Warnf("%s with type %T is not a prime number", num, num)
