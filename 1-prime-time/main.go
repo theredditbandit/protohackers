@@ -74,7 +74,7 @@ func handle(conn net.Conn) {
 				}
 			}
 		} else { // request is malformed
-			log.Warn("request is MALFORMED", "req", data)
+			log.Info("request is MALFORMED", "req", data)
 			sendMalformedReqBack(conn, data)
 			break
 		}
@@ -87,7 +87,7 @@ func sendMalformedReqBack(conn net.Conn, req request) {
 	var r response
 	r.Method = "MALFORMED"
 	r.Prime = false
-	log.Info("sending response ->", "resp", r, "orignalData", req)
+	log.Warn("sending response ->", "resp", r, "orignalData", req)
 	if err := json.NewEncoder(conn).Encode(r); err != nil {
 		log.Fatal("failed to encode response", "err", err)
 	}
