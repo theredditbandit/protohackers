@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io"
+	"math"
 	"net"
 
 	"github.com/charmbracelet/log"
@@ -91,14 +92,11 @@ func (d *request) hasPrime() bool {
 		log.Info("num is an int", "num", num)
 		return isPrime(num)
 	case float64:
-		intNum := int(num)
-		floatNum := float64(num)
-		diff := float64(intNum) - floatNum
-		if diff != 0 {
+		if num == math.Floor(num) {
 			log.Info("checking float64 converted int", "orignal", num, "converted", int(num))
 			return isPrime(int(num))
 		}
-		log.Warn("num is a float", "float", num)
+		log.Debug("num is a float", "float", num)
 		return false
 	default:
 		log.Warnf("%s with type %T is not a prime number", num, num)
