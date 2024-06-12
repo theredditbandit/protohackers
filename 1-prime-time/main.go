@@ -49,8 +49,6 @@ func handle(conn net.Conn) {
 			if err != io.EOF {
 				if _, ok := err.(*json.SyntaxError); ok {
 					log.Warn("malformed request , failed to decode json", "decoder error", err, "")
-					sendMalformedReqBack(conn)
-					break
 				}
 			}
 		}
@@ -77,7 +75,7 @@ func handle(conn net.Conn) {
 			}
 		} else { // request is malformed
 			log.Warn("request is MALFORMED", "req", data)
-			sendMalformedReqBack(conn)
+			sendMalformedReqBack(conn, data)
 			break
 		}
 	}
@@ -85,11 +83,11 @@ func handle(conn net.Conn) {
 	defer conn.Close()
 }
 
-func sendMalformedReqBack(conn net.Conn) {
+func sendMalformedReqBack(conn net.Conn, req request) {
 	var r response
 	r.Method = "MALFORMED"
 	r.Prime = false
-	log.Info("sending response ", "resp", r)
+	log.Info("sending response ->", "resp", r, "orignalData", req)
 	if err := json.NewEncoder(conn).Encode(r); err != nil {
 		log.Fatal("failed to encode response", "err", err)
 	}
