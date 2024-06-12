@@ -92,7 +92,9 @@ func (d *request) hasPrime() bool {
 		log.Info("num is an int", "num", num)
 		return isPrime(num)
 	case float64:
-		if num == math.Floor(num) {
+		floor := math.Floor(num)
+		if num == floor {
+			log.Debug("these are equal", "num", num, "floor", floor)
 			log.Info("checking float64 converted int", "orignal", num, "converted", int(num))
 			return isPrime(int(num))
 		}
