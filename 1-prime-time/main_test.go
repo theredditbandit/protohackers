@@ -13,6 +13,7 @@ func Test_isPrime(t *testing.T) {
 		args args
 		want bool
 	}{
+		{name: "even", args: args{n: 2}, want: true},
 		{name: "even", args: args{n: 4}, want: false},
 		{name: "even2", args: args{n: 10}, want: false},
 		{name: "even3", args: args{n: 18}, want: false},

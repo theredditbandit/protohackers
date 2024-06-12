@@ -28,9 +28,8 @@ func main() {
 }
 
 type request struct {
-	Method     string      `json:"method"`
-	Number     interface{} `json:"number"`
-	isValidNum bool
+	Method string      `json:"method"`
+	Number interface{} `json:"number"`
 }
 
 type response struct {
@@ -89,6 +88,7 @@ func handle(conn net.Conn) {
 func (d *request) hasPrime() bool {
 	switch num := d.Number.(type) {
 	case int:
+		log.Info("num is an int", "num", num)
 		return isPrime(num)
 	case float64:
 		if float64(int(num)) == num { // check if the float value is an int
