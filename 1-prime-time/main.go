@@ -4,22 +4,14 @@ import (
 	"encoding/json"
 	"io"
 	"net"
-	"os"
 
 	"github.com/charmbracelet/log"
 )
 
 func main() {
-	var debug bool
-	args := os.Args
-	if len(args) > 1 {
-		debug = true
-		log.SetLevel(log.DebugLevel)
-	}
+	log.SetLevel(log.DebugLevel)
 	log.SetReportTimestamp(true)
-	if debug {
-		log.SetReportCaller(true)
-	}
+	log.SetReportCaller(true)
 	ln, err := net.Listen("tcp4", ":10000")
 	if err != nil {
 		log.Fatal(err)
