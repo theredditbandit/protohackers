@@ -44,11 +44,14 @@ func handle(conn net.Conn) {
 	for {
 		var data request
 		var r response
-		err := json.NewDecoder(conn).Decode(&data)
+		decoder := json.NewDecoder(conn)
+		err := decoder.Decode(&data)
 		if err != nil {
 			if err != io.EOF {
 				if _, ok := err.(*json.SyntaxError); ok {
 					log.Warn("malformed request , failed to decode json", "decoder error", err, "")
+					buf, _ := io.ReadAll(decoder.Buffered())
+					log.Warn("raw request", "buf", string(buf))
 				}
 			}
 		}
