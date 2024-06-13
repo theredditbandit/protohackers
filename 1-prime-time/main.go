@@ -78,7 +78,7 @@ func handle(conn net.Conn) {
 			}
 		} else { // request is malformed
 			log.Info("request is MALFORMED", "req", data)
-			sendMalformedReqBack(conn, data)
+			sendMalformedRespBack(conn, data)
 			break
 		}
 	}
@@ -86,7 +86,7 @@ func handle(conn net.Conn) {
 	defer conn.Close()
 }
 
-func sendMalformedReqBack(conn net.Conn, req request) {
+func sendMalformedRespBack(conn net.Conn, req request) {
 	var r response
 	r.Method = "MALFORMED"
 	r.Prime = false
